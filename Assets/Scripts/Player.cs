@@ -9,6 +9,19 @@ public class Player : MonoBehaviour {
     public float animationSpeedMultiplier = 0.5f;
 
     void Update() {
+        handleMove();
+        handleFlip();
+    }
+
+    private void handleFlip() {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint( Input.mousePosition );
+        Vector2 scale = transform.localScale;
+        if( mousePos.x < transform.position.x ) scale.x = -1;
+        else scale.x = 1;
+        transform.localScale = scale;
+    }
+
+    private void handleMove() {
         Vector2 velocity = calculateVelocity();
         updateAnimationSpeed( velocity );
         move( velocity );
