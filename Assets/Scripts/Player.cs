@@ -2,15 +2,25 @@
 
 public class Player : MonoBehaviour {
 
-    public Animator animator;
 
-    public float MOVE_SPEED = 1.0f;
-    private const float MOVE_CONST = 4.0f;
+    public float moveForce = 300f;
+
+    private Rigidbody2D rb;
+    private Animator anim;
+
     public float animationSpeedMultiplier = 0.5f;
 
-    void Update() {
-        handleMove();
+    private void Awake() {
+        anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void Update() {
         handleFlip();
+    }
+
+    private void FixedUpdate() {
+        handleMove();
     }
 
     private void handleFlip() {
@@ -22,26 +32,23 @@ public class Player : MonoBehaviour {
     }
 
     private void handleMove() {
-        Vector2 velocity = calculateVelocity();
-        updateAnimationSpeed( velocity );
-        move( velocity );
+        Vector2 direction = getMoveVector();
+        updateAnimationSpeed( direction );
+        move( direction );
     }
 
-    private void move( Vector2 velocity ) {
-        Vector2 position = transform.position;
-        position += velocity * Time.deltaTime;
-        transform.position = position;
+    private Vector2 getMoveVector() {
+        Vector2 velocity = new Vector2( Input.GetAxis( "Horizontal" ), Input.GetAxis( "Vertical" ) );
+        velocity = Vector2.ClampMagnitude( velocity, 1 );
+        return velocity;
+    }
+
+    private void move( Vector2 direction ) {
+        Vector2 force = direction * moveForce;
+        rb.AddForce( force );
     }
 
     private void updateAnimationSpeed( Vector2 velocity ) {
-        animator.speed = velocity.magnitude * animationSpeedMultiplier;
-    }
-
-    private Vector2 calculateVelocity() {
-        Vector2 velocity = new Vector2( Input.GetAxis( "Horizontal" ), Input.GetAxis( "Vertical" ) );
-        velocity = Vector2.ClampMagnitude( velocity, 1 );
-        velocity *= ( MOVE_CONST * MOVE_SPEED );
-        return velocity;
+        anim.speed = velocity.magnitude * animationSpeedMultiplier;
     }
 }
-
