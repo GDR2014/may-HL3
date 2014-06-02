@@ -11,30 +11,34 @@ public class Weapon : MonoBehaviour {
     public int DamageAmount = 99999;
     public float HitForce = 1000000;
 
-    private Collider2D collider;
+    private Collider2D col;
+
+    private GameManager gameManager;
 
     void Awake()
     {
-        collider = GetComponent<Collider2D>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        col = GetComponent<Collider2D>();
     }
 
     void Start()
     {
-        collider.enabled = false;
+        col.enabled = false;
     }
 
     void Update() {
+        if (gameManager.gameOver) return;
         if( Input.GetMouseButtonDown( 0 ) && canAttack ) attack();
     }
 
     void attack() {
-        collider.enabled = true;
+        col.enabled = true;
         animator.SetTrigger( "doAttack" );
     }
 
     void stopAttack()
     {
-        collider.enabled = false;
+        col.enabled = false;
     }
 
     IEnumerator beginCooldown() {

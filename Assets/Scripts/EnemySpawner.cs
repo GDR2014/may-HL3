@@ -20,7 +20,6 @@ public class EnemySpawner : MonoBehaviour {
     private List<Vector2> spawnPointBuffer;
 
 	private void Start () {
-        Debug.Log("Start called!");
         spawnPointBuffer = new List<Vector2>(spawnPoints.Length);
         cam = Camera.main;
         planes = GeometryUtility.CalculateFrustumPlanes(cam);
@@ -29,7 +28,6 @@ public class EnemySpawner : MonoBehaviour {
 
     private IEnumerator EnemySpawnRoutine()
     {
-        Debug.Log("Coroutine started!");
         spawnPointBuffer.Clear();
         yield return new WaitForSeconds(spawnInterval);
         foreach(var point in spawnPoints ) if( !IsInView(point) ) spawnPointBuffer.Add(point);
